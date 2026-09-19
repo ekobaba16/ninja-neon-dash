@@ -1,0 +1,3034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>Play Ninja Neon Dash – Ninja Neon Runner</title>
+<meta name="description" content="Play Ninja Neon Dash, a free ninja neon runner game. Jump, collect coins, unlock ninja outfits and defeat bosses.">
+<meta name="robots" content="index, follow">
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#03040b;
+    font-family:Arial,Helvetica,sans-serif;
+    color:#fff;
+    touch-action:none;
+    user-select:none;
+    -webkit-user-select:none;
+}
+
+body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+#gameShell{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+
+#gameWrap{
+    position:relative;
+    width:min(1200px,100vw);
+    aspect-ratio:2/1;
+    max-height:100vh;
+}
+
+canvas{
+    display:block;
+    width:100%;
+    height:100%;
+    background:#050713;
+    border-radius:16px;
+    box-shadow:
+        0 0 25px rgba(0,247,255,.18),
+        0 0 70px rgba(139,92,246,.12);
+}
+
+button{
+    font:inherit;
+}
+
+.screen{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(circle at 50% 35%,
+        rgba(20,10,60,.55),
+        rgba(0,0,0,.78));
+    backdrop-filter:blur(5px);
+    z-index:20;
+}
+
+.panel{
+    width:min(900px,92%);
+    max-height:92%;
+    overflow:auto;
+    padding:28px;
+    border:1px solid rgba(0,247,255,.22);
+    border-radius:24px;
+    background:rgba(5,7,20,.9);
+    box-shadow:
+        0 0 35px rgba(0,247,255,.1);
+    text-align:center;
+}
+
+.logo{
+    font-size:clamp(30px,7vw,70px);
+    font-weight:900;
+    line-height:1;
+    margin-bottom:12px;
+    background:linear-gradient(
+        90deg,
+        #00f7ff,
+        #8b5cf6,
+        #ff247f
+    );
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+}
+
+.subtitle{
+    color:#b9bed0;
+    margin-bottom:25px;
+}
+
+.menuGrid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    max-width:600px;
+    margin:auto;
+}
+
+.btn{
+    border:1px solid rgba(0,247,255,.25);
+    background:rgba(255,255,255,.06);
+    color:white;
+    border-radius:15px;
+    padding:15px 18px;
+    cursor:pointer;
+    font-weight:800;
+    transition:.18s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+    background:rgba(0,247,255,.1);
+    border-color:#00f7ff;
+}
+
+.btn.primary{
+    background:linear-gradient(90deg,#00d9ff,#7c3aed);
+    border:none;
+}
+
+.btn.danger{
+    background:linear-gradient(90deg,#ff247f,#8b5cf6);
+    border:none;
+}
+
+.back{
+    margin-top:18px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-top:18px;
+}
+
+.card{
+    padding:18px;
+    border-radius:17px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+}
+
+.card strong{
+    display:block;
+    color:#00f7ff;
+    margin-bottom:8px;
+}
+
+.stat{
+    color:#b9bed0;
+    line-height:1.7;
+}
+
+.outfits{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-top:18px;
+}
+
+.outfit{
+    padding:18px 10px;
+    border-radius:17px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+    cursor:pointer;
+}
+
+.outfit.locked{
+    opacity:.42;
+    cursor:not-allowed;
+}
+
+.outfit.selected{
+    border-color:#00f7ff;
+    box-shadow:0 0 18px rgba(0,247,255,.18);
+}
+
+.ninjaPreview{
+    width:50px;
+    height:65px;
+    margin:0 auto 10px;
+    border-radius:10px;
+    box-shadow:0 0 20px currentColor;
+}
+
+.shopGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-top:18px;
+}
+
+.shopItem{
+    padding:18px;
+    border-radius:17px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+}
+
+.shopItem h3{
+    margin-bottom:8px;
+}
+
+.shopItem p{
+    color:#aeb3c5;
+    font-size:14px;
+    min-height:40px;
+}
+
+.coinText{
+    color:#ffd54a;
+    font-weight:900;
+}
+
+.toggleRow{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:15px;
+    margin:10px 0;
+    border-radius:14px;
+    background:rgba(255,255,255,.05);
+}
+
+.toggle{
+    width:56px;
+    height:30px;
+    border-radius:30px;
+    background:#333;
+    position:relative;
+    cursor:pointer;
+}
+
+.toggle::after{
+    content:"";
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:white;
+    position:absolute;
+    top:3px;
+    left:3px;
+    transition:.2s;
+}
+
+.toggle.on{
+    background:#00cfff;
+}
+
+.toggle.on::after{
+    left:29px;
+}
+
+.mission{
+    text-align:left;
+    margin:10px 0;
+    padding:15px;
+    border-radius:14px;
+    background:rgba(255,255,255,.05);
+}
+
+.progress{
+    height:8px;
+    border-radius:10px;
+    background:#222638;
+    overflow:hidden;
+    margin:10px 0;
+}
+
+.progress span{
+    display:block;
+    height:100%;
+    background:linear-gradient(90deg,#00f7ff,#8b5cf6);
+}
+
+.reward{
+    color:#ffd54a;
+    font-weight:bold;
+}
+
+#hud{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:10;
+}
+
+.hudTop{
+    position:absolute;
+    top:15px;
+    left:15px;
+    right:15px;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.hudBox{
+    padding:9px 12px;
+    border-radius:12px;
+    background:rgba(0,0,0,.48);
+    border:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(5px);
+    font-weight:800;
+}
+
+#unlockPopup{
+    position:absolute;
+    left:50%;
+    top:17%;
+    transform:translate(-50%,-30px);
+    opacity:0;
+    padding:15px 25px;
+    border-radius:16px;
+    background:rgba(0,0,0,.8);
+    border:1px solid #00f7ff;
+    box-shadow:0 0 30px rgba(0,247,255,.3);
+    transition:.35s;
+    z-index:30;
+    pointer-events:none;
+    text-align:center;
+}
+
+#unlockPopup.show{
+    opacity:1;
+    transform:translate(-50%,0);
+}
+
+#touchHint{
+    position:absolute;
+    left:50%;
+    bottom:16px;
+    transform:translateX(-50%);
+    padding:8px 14px;
+    border-radius:20px;
+    background:rgba(0,0,0,.4);
+    color:#aaa;
+    font-size:13px;
+}
+
+.hidden{
+    display:none!important;
+}
+
+@media(max-width:700px){
+    .menuGrid{
+        grid-template-columns:1fr;
+    }
+
+    .cards,
+    .outfits,
+    .shopGrid{
+        grid-template-columns:1fr;
+    }
+
+    .panel{
+        padding:20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="gameShell">
+
+<div id="gameWrap">
+
+<canvas id="game" width="1000" height="500"></canvas>
+
+<div id="hud" class="hidden">
+
+    <div class="hudTop">
+
+        <div class="hudBox">
+            ❤️ <span id="livesText">3</span>
+        </div>
+
+        <div class="hudBox">
+            🏆 <span id="scoreText">0</span>
+        </div>
+
+        <div class="hudBox">
+            🪙 <span id="runCoinsText">0</span>
+        </div>
+
+    </div>
+
+    <div id="touchHint">
+        TAP / SPACE TO JUMP
+    </div>
+
+</div>
+
+<div id="unlockPopup">
+    <div id="unlockTitle">NEW NINJA!</div>
+    <div id="unlockText"></div>
+</div>
+
+
+<!-- MAIN MENU -->
+
+<section id="mainMenu" class="screen">
+
+<div class="panel">
+
+    <div class="logo">
+        NINJA NEON DASH
+    </div>
+
+    <div class="subtitle">
+        Ninja Neon Runner Game
+    </div>
+
+    <div class="menuGrid">
+
+        <button class="btn primary" onclick="startGame()">
+            🥷 PLAY
+        </button>
+
+        <button class="btn" onclick="showScreen('ninjaMenu')">
+            🥷 NINJA
+        </button>
+
+        <button class="btn" onclick="showScreen('shopMenu')">
+            🛒 SHOP
+        </button>
+
+        <button class="btn" onclick="showScreen('missionsMenu')">
+            🎯 MISSIONS
+        </button>
+
+        <button class="btn" onclick="dailyReward()">
+            🎁 DAILY REWARD
+        </button>
+
+        <button class="btn" onclick="showScreen('settingsMenu')">
+            ⚙️ SETTINGS
+        </button>
+
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <strong>🏆 HIGH SCORE</strong>
+            <div class="stat" id="menuHighScore">0</div>
+        </div>
+
+        <div class="card">
+            <strong>🪙 COINS</strong>
+            <div class="stat" id="menuCoins">0</div>
+        </div>
+
+        <div class="card">
+            <strong>🥷 NINJA</strong>
+            <div class="stat" id="menuNinja">Blue</div>
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- NINJA -->
+
+<section id="ninjaMenu" class="screen hidden">
+
+<div class="panel">
+
+    <h2>🥷 NINJA OUTFITS</h2>
+
+    <p class="subtitle">
+        Unlock outfits by reaching score milestones.
+    </p>
+
+    <div id="outfits" class="outfits"></div>
+
+    <button class="btn back" onclick="showScreen('mainMenu')">
+        ← BACK
+    </button>
+
+</div>
+
+</section>
+
+
+<!-- SHOP -->
+
+<section id="shopMenu" class="screen hidden">
+
+<div class="panel">
+
+    <h2>🛒 SHOP</h2>
+
+    <p>
+        Coins:
+        <span class="coinText" id="shopCoins">0</span>
+    </p>
+
+    <div class="shopGrid">
+
+        <div class="shopItem">
+
+            <h3>🪙 2× COINS</h3>
+
+            <p>
+                Double coins during your run.
+            </p>
+
+            <button class="btn" onclick="buyItem('doubleCoins')">
+                BUY 500 🪙
+            </button>
+
+        </div>
+
+        <div class="shopItem">
+
+            <h3>🛡️ SHIELD</h3>
+
+            <p>
+                Survive one collision.
+            </p>
+
+            <button class="btn" onclick="buyItem('shield')">
+                BUY 700 🪙
+            </button>
+
+        </div>
+
+        <div class="shopItem">
+
+            <h3>🧲 MAGNET</h3>
+
+            <p>
+                Automatically attract nearby coins.
+            </p>
+
+            <button class="btn" onclick="buyItem('magnet')">
+                BUY 900 🪙
+            </button>
+
+        </div>
+
+    </div>
+
+    <button class="btn back" onclick="showScreen('mainMenu')">
+        ← BACK
+    </button>
+
+</div>
+
+</section>
+
+
+<!-- MISSIONS -->
+
+<section id="missionsMenu" class="screen hidden">
+
+<div class="panel">
+
+    <h2>🎯 MISSIONS</h2>
+
+    <div id="missions"></div>
+
+    <button class="btn back" onclick="showScreen('mainMenu')">
+        ← BACK
+    </button>
+
+</div>
+
+</section>
+
+
+<!-- SETTINGS -->
+
+<section id="settingsMenu" class="screen hidden">
+
+<div class="panel">
+
+    <h2>⚙️ SETTINGS</h2>
+
+    <div class="toggleRow">
+
+        <span>
+            🔊 Game Sounds
+        </span>
+
+        <div id="soundToggle"
+             class="toggle"
+             onclick="toggleSetting('sound')">
+        </div>
+
+    </div>
+
+    <div class="toggleRow">
+
+        <span>
+            🎵 Menu Music
+        </span>
+
+        <div id="musicToggle"
+             class="toggle"
+             onclick="toggleSetting('music')">
+        </div>
+
+    </div>
+
+    <div class="toggleRow">
+
+        <span>
+            📳 Vibration
+        </span>
+
+        <div id="vibrationToggle"
+             class="toggle"
+             onclick="toggleSetting('vibration')">
+        </div>
+
+    </div>
+
+    <button class="btn back" onclick="showScreen('mainMenu')">
+        ← BACK
+    </button>
+
+</div>
+
+</section>
+
+
+<!-- GAME OVER -->
+
+<section id="gameOver" class="screen hidden">
+
+<div class="panel">
+
+    <div class="logo" style="font-size:55px;">
+        GAME OVER
+    </div>
+
+    <p class="subtitle">
+        Your run has ended.
+    </p>
+
+    <div class="cards">
+
+        <div class="card">
+            <strong>SCORE</strong>
+            <div class="stat" id="finalScore">0</div>
+        </div>
+
+        <div class="card">
+            <strong>COINS</strong>
+            <div class="stat" id="finalCoins">0</div>
+        </div>
+
+        <div class="card">
+            <strong>HIGH SCORE</strong>
+            <div class="stat" id="finalHighScore">0</div>
+        </div>
+
+    </div>
+
+    <div class="menuGrid" style="margin-top:20px;">
+
+        <button class="btn primary" onclick="startGame()">
+            🔄 PLAY AGAIN
+        </button>
+
+        <button class="btn" onclick="showScreen('mainMenu')">
+            🏠 MAIN MENU
+        </button>
+
+    </div>
+
+</div>
+
+</section>
+
+</div>
+
+</div>
+
+
+<script>
+
+"use strict";
+
+
+/* =========================
+   SAVE DATA
+========================= */
+
+const SAVE_KEY = "ninjaNeonDashSave_v3";
+
+
+const defaultSave = {
+
+    highScore:0,
+
+    coins:0,
+
+    selectedOutfit:"blue",
+
+    unlockedOutfits:["blue"],
+
+    settings:{
+        sound:true,
+        music:true,
+        vibration:true
+    },
+
+    inventory:{
+        doubleCoins:0,
+        shield:0,
+        magnet:0
+    },
+
+    missions:{
+        score:0,
+        jumps:0,
+        coins:0,
+        bosses:0
+    },
+
+    completed:{
+        score:false,
+        jumps:false,
+        coins:false,
+        bosses:false
+    },
+
+    daily:{
+        last:"",
+        streak:0
+    }
+
+};
+
+
+let save;
+
+
+function loadSave(){
+
+    try{
+
+        const raw =
+            localStorage.getItem(SAVE_KEY);
+
+        if(raw){
+
+            save = JSON.parse(raw);
+
+        }else{
+
+            save = structuredClone(defaultSave);
+
+        }
+
+    }catch(e){
+
+        save = structuredClone(defaultSave);
+
+    }
+
+    save.highScore =
+        Number(save.highScore)||0;
+
+    save.coins =
+        Number(save.coins)||0;
+
+    if(!save.inventory){
+
+        save.inventory =
+            structuredClone(defaultSave.inventory);
+
+    }
+
+    if(!save.missions){
+
+        save.missions =
+            structuredClone(defaultSave.missions);
+
+    }
+
+    if(!save.completed){
+
+        save.completed =
+            structuredClone(defaultSave.completed);
+
+    }
+
+    if(!save.settings){
+
+        save.settings =
+            structuredClone(defaultSave.settings);
+
+    }
+
+    if(!save.unlockedOutfits){
+
+        save.unlockedOutfits=["blue"];
+
+    }
+
+}
+
+
+function saveData(){
+
+    localStorage.setItem(
+        SAVE_KEY,
+        JSON.stringify(save)
+    );
+
+}
+
+
+/* =========================
+   CANVAS
+========================= */
+
+const canvas =
+    document.getElementById("game");
+
+const ctx =
+    canvas.getContext("2d");
+
+const W = canvas.width;
+const H = canvas.height;
+
+
+/* =========================
+   GAME STATE
+========================= */
+
+let running = false;
+
+let score = 0;
+
+let runCoins = 0;
+
+let lives = 3;
+
+let frame = 0;
+
+let speed = 6;
+
+let groundY = 420;
+
+let cameraShake = 0;
+
+let gameOverTimer = 0;
+
+let shieldUsed = false;
+
+let magnetActive = false;
+
+let doubleCoinsActive = false;
+
+let boss = null;
+
+let obstacles = [];
+
+let coins = [];
+
+let particles = [];
+
+let buildings = [];
+
+
+/* =========================
+   NINJA
+========================= */
+
+const ninja = {
+
+    x:120,
+
+    y:groundY-70,
+
+    w:45,
+
+    h:70,
+
+    vy:0,
+
+    jumping:false,
+
+    color:"#00f7ff"
+
+};
+
+
+/* =========================
+   OUTFITS
+========================= */
+
+const outfits = [
+
+    {
+        id:"blue",
+        name:"Blue Ninja",
+        score:0,
+        color:"#00f7ff"
+    },
+
+    {
+        id:"red",
+        name:"Red Ninja",
+        score:10000,
+        color:"#ff244f"
+    },
+
+    {
+        id:"white",
+        name:"White Ninja",
+        score:20000,
+        color:"#ffffff"
+    },
+
+    {
+        id:"purple",
+        name:"Purple Ninja",
+        score:30000,
+        color:"#b35cff"
+    },
+
+    {
+        id:"green",
+        name:"Neon Green",
+        score:50000,
+        color:"#49ff76"
+    },
+
+    {
+        id:"gold",
+        name:"Golden Ninja",
+        score:100000,
+        color:"#ffd43b"
+    }
+
+];
+
+
+function getOutfit(){
+
+    return outfits.find(
+        o=>o.id===save.selectedOutfit
+    ) || outfits[0];
+
+}
+
+
+/* =========================
+   BUILDINGS
+========================= */
+
+function createBuildings(){
+
+    buildings=[];
+
+    for(let x=0;x<W+300;x+=90){
+
+        buildings.push({
+
+            x,
+
+            width:60+Math.random()*70,
+
+            height:80+Math.random()*170,
+
+            speed:.15+Math.random()*.25,
+
+            lights:Array.from(
+                {length:12},
+                ()=>Math.random()>.35
+            )
+
+        });
+
+    }
+
+}
+
+
+createBuildings();
+
+
+/* =========================
+   AUDIO
+========================= */
+
+let audioCtx = null;
+
+let musicTimer = null;
+
+
+function getAudio(){
+
+    if(!audioCtx){
+
+        try{
+
+            audioCtx =
+                new (
+                    window.AudioContext ||
+                    window.webkitAudioContext
+                )();
+
+        }catch(e){
+
+            return null;
+
+        }
+
+    }
+
+    if(audioCtx.state==="suspended"){
+
+        audioCtx.resume().catch(()=>{});
+
+    }
+
+    return audioCtx;
+
+}
+
+
+function sfx(
+    frequency,
+    duration=.08,
+    type="square",
+    volume=.04
+){
+
+    if(!save.settings.sound)
+        return;
+
+    const ac = getAudio();
+
+    if(!ac) return;
+
+    const osc =
+        ac.createOscillator();
+
+    const gain =
+        ac.createGain();
+
+    osc.type=type;
+
+    osc.frequency.value=
+        frequency;
+
+    gain.gain.value=volume;
+
+    gain.gain.exponentialRampToValueAtTime(
+        .001,
+        ac.currentTime+duration
+    );
+
+    osc.connect(gain);
+
+    gain.connect(ac.destination);
+
+    osc.start();
+
+    osc.stop(
+        ac.currentTime+duration
+    );
+
+}
+
+
+function startMenuMusic(){
+
+    if(
+        !save.settings.music ||
+        musicTimer
+    )
+        return;
+
+    const ac = getAudio();
+
+    if(!ac) return;
+
+    const notes=[
+        220,277,330,440,
+        330,277,220
+    ];
+
+    let i=0;
+
+    musicTimer=setInterval(()=>{
+
+        if(!save.settings.music)
+            return;
+
+        const n=notes[i%notes.length];
+
+        const osc=
+            ac.createOscillator();
+
+        const gain=
+            ac.createGain();
+
+        osc.type="sine";
+
+        osc.frequency.value=n;
+
+        gain.gain.value=.008;
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            ac.currentTime+.35
+        );
+
+        osc.connect(gain);
+
+        gain.connect(ac.destination);
+
+        osc.start();
+
+        osc.stop(
+            ac.currentTime+.35
+        );
+
+        i++;
+
+    },420);
+
+}
+
+
+function stopMenuMusic(){
+
+    if(musicTimer){
+
+        clearInterval(musicTimer);
+
+        musicTimer=null;
+
+    }
+
+}
+
+
+/* =========================
+   SCREENS
+========================= */
+
+function showScreen(id){
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(el=>{
+            el.classList.add("hidden");
+        });
+
+    const el =
+        document.getElementById(id);
+
+    if(el)
+        el.classList.remove("hidden");
+
+    if(id==="mainMenu"){
+
+        running=false;
+
+        updateMenu();
+
+        startMenuMusic();
+
+    }else{
+
+        stopMenuMusic();
+
+    }
+
+}
+
+
+function updateMenu(){
+
+    document.getElementById(
+        "menuHighScore"
+    ).textContent =
+        Math.floor(save.highScore).toLocaleString();
+
+    document.getElementById(
+        "menuCoins"
+    ).textContent =
+        save.coins.toLocaleString();
+
+    document.getElementById(
+        "menuNinja"
+    ).textContent =
+        getOutfit().name;
+
+    document.getElementById(
+        "shopCoins"
+    ).textContent =
+        save.coins.toLocaleString();
+
+    renderOutfits();
+
+    renderMissions();
+
+    updateSettings();
+
+}
+
+
+function hideAllScreens(){
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(el=>{
+            el.classList.add("hidden");
+        });
+
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+function toggleSetting(key){
+
+    save.settings[key] =
+        !save.settings[key];
+
+    saveData();
+
+    updateSettings();
+
+    if(key==="music"){
+
+        if(save.settings.music){
+
+            startMenuMusic();
+
+        }else{
+
+            stopMenuMusic();
+
+        }
+
+    }
+
+}
+
+
+function updateSettings(){
+
+    const sound =
+        document.getElementById("soundToggle");
+
+    const music =
+        document.getElementById("musicToggle");
+
+    const vibration =
+        document.getElementById("vibrationToggle");
+
+    sound.classList.toggle(
+        "on",
+        save.settings.sound
+    );
+
+    music.classList.toggle(
+        "on",
+        save.settings.music
+    );
+
+    vibration.classList.toggle(
+        "on",
+        save.settings.vibration
+    );
+
+}
+
+
+/* =========================
+   OUTFITS
+========================= */
+
+function renderOutfits(){
+
+    const box =
+        document.getElementById("outfits");
+
+    box.innerHTML="";
+
+    outfits.forEach(outfit=>{
+
+        const unlocked =
+            save.unlockedOutfits.includes(
+                outfit.id
+            );
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "outfit " +
+            (!unlocked?"locked ":"") +
+            (save.selectedOutfit===outfit.id
+                ?"selected":"");
+
+        div.innerHTML=`
+
+            <div
+                class="ninjaPreview"
+                style="
+                    background:${outfit.color};
+                    color:${outfit.color};
+                ">
+            </div>
+
+            <strong>${outfit.name}</strong>
+
+            <div style="margin-top:7px;color:#aaa;">
+
+                ${
+                    unlocked
+                    ? (
+                        save.selectedOutfit===outfit.id
+                        ? "SELECTED"
+                        : "SELECT"
+                    )
+                    : `🔒 ${outfit.score.toLocaleString()} SCORE`
+                }
+
+            </div>
+
+        `;
+
+        if(unlocked){
+
+            div.onclick=()=>{
+
+                save.selectedOutfit=
+                    outfit.id;
+
+                saveData();
+
+                updateMenu();
+
+                sfx(700,.08);
+
+            };
+
+        }
+
+        box.appendChild(div);
+
+    });
+
+}
+
+
+/* =========================
+   SHOP
+========================= */
+
+const shopPrices={
+
+    doubleCoins:500,
+
+    shield:700,
+
+    magnet:900
+
+};
+
+
+function buyItem(item){
+
+    const price =
+        shopPrices[item];
+
+    if(save.coins<price){
+
+        sfx(120,.1,"sawtooth");
+
+        alert(
+            "Not enough coins!"
+        );
+
+        return;
+
+    }
+
+    save.coins-=price;
+
+    save.inventory[item]++;
+
+    saveData();
+
+    updateMenu();
+
+    sfx(700,.1);
+
+}
+
+
+/* =========================
+   MISSIONS
+========================= */
+
+const missionData=[
+
+    {
+        id:"score",
+        title:"Reach 50,000 total score",
+        target:50000,
+        reward:500
+    },
+
+    {
+        id:"jumps",
+        title:"Perform 1,000 jumps",
+        target:1000,
+        reward:350
+    },
+
+    {
+        id:"coins",
+        title:"Collect 1,000 coins",
+        target:1000,
+        reward:400
+    },
+
+    {
+        id:"bosses",
+        title:"Defeat 10 bosses",
+        target:10,
+        reward:750
+    }
+
+];
+
+
+function renderMissions(){
+
+    const box =
+        document.getElementById("missions");
+
+    box.innerHTML="";
+
+    missionData.forEach(m=>{
+
+        const value =
+            Math.min(
+                save.missions[m.id],
+                m.target
+            );
+
+        const percent =
+            Math.min(
+                100,
+                value/m.target*100
+            );
+
+        const div =
+            document.createElement("div");
+
+        div.className="mission";
+
+        div.innerHTML=`
+
+            <strong>${m.title}</strong>
+
+            <div class="progress">
+                <span
+                    style="width:${percent}%">
+                </span>
+            </div>
+
+            <div style="color:#aaa;">
+
+                ${value.toLocaleString()}
+                /
+                ${m.target.toLocaleString()}
+
+            </div>
+
+            <div class="reward">
+
+                Reward: ${m.reward} 🪙
+
+            </div>
+
+            ${
+                save.completed[m.id]
+                ? "<div style='color:#49ff76;margin-top:7px;'>✓ COMPLETED</div>"
+                : ""
+            }
+
+        `;
+
+        box.appendChild(div);
+
+    });
+
+}
+
+
+/* =========================
+   DAILY REWARD
+========================= */
+
+function dateKey(){
+
+    const d=new Date();
+
+    return [
+        d.getFullYear(),
+        d.getMonth()+1,
+        d.getDate()
+    ].join("-");
+
+}
+
+
+function dailyReward(){
+
+    const today=dateKey();
+
+    if(save.daily.last===today){
+
+        alert(
+            "Daily reward already collected today!"
+        );
+
+        return;
+
+    }
+
+    const reward =
+        100 + save.daily.streak*50;
+
+    save.coins+=reward;
+
+    save.daily.streak++;
+
+    save.daily.last=today;
+
+    saveData();
+
+    updateMenu();
+
+    sfx(900,.15);
+
+    alert(
+        `Daily Reward: +${reward} coins!`
+    );
+
+}
+
+
+/* =========================
+   MISSIONS UPDATE
+========================= */
+
+function checkMissions(){
+
+    missionData.forEach(m=>{
+
+        if(
+            !save.completed[m.id] &&
+            save.missions[m.id]>=m.target
+        ){
+
+            save.completed[m.id]=true;
+
+            save.coins+=m.reward;
+
+            showUnlock(
+                "MISSION COMPLETE",
+                `+${m.reward} coins`
+            );
+
+            sfx(1000,.18);
+
+        }
+
+    });
+
+}
+
+
+/* =========================
+   GAME RESET
+========================= */
+
+function resetGame(){
+
+    score=0;
+
+    runCoins=0;
+
+    lives=3;
+
+    frame=0;
+
+    speed=6;
+
+    cameraShake=0;
+
+    gameOverTimer=0;
+
+    shieldUsed=false;
+
+    magnetActive=
+        save.inventory.magnet>0;
+
+    doubleCoinsActive=
+        save.inventory.doubleCoins>0;
+
+    boss=null;
+
+    obstacles=[];
+
+    coins=[];
+
+    particles=[];
+
+    ninja.y=
+        groundY-ninja.h;
+
+    ninja.vy=0;
+
+    ninja.jumping=false;
+
+    ninja.color=
+        getOutfit().color;
+
+}
+
+
+/* =========================
+   START GAME
+========================= */
+
+function startGame(){
+
+    stopMenuMusic();
+
+    hideAllScreens();
+
+    resetGame();
+
+    running=true;
+
+    document
+        .getElementById("hud")
+        .classList.remove("hidden");
+
+    updateHUD();
+
+    getAudio();
+
+    requestAnimationFrame(loop);
+
+}
+
+
+/* =========================
+   GAME OVER
+========================= */
+
+function endGame(){
+
+    if(!running)
+        return;
+
+    running=false;
+
+    document
+        .getElementById("hud")
+        .classList.add("hidden");
+
+    const oldHigh =
+        save.highScore;
+
+    if(score>save.highScore){
+
+        save.highScore=
+            Math.floor(score);
+
+    }
+
+    save.coins+=runCoins;
+
+    saveData();
+
+    document.getElementById(
+        "finalScore"
+    ).textContent =
+        Math.floor(score).toLocaleString();
+
+    document.getElementById(
+        "finalCoins"
+    ).textContent =
+        runCoins.toLocaleString();
+
+    document.getElementById(
+        "finalHighScore"
+    ).textContent =
+        Math.floor(save.highScore).toLocaleString();
+
+    showScreen("gameOver");
+
+    if(score>oldHigh){
+
+        showUnlock(
+            "NEW HIGH SCORE!",
+            Math.floor(score).toLocaleString()
+        );
+
+    }
+
+}
+
+
+/* =========================
+   JUMP
+========================= */
+
+function jump(){
+
+    if(!running)
+        return;
+
+    if(!ninja.jumping){
+
+        ninja.vy=-15;
+
+        ninja.jumping=true;
+
+        save.missions.jumps++;
+
+        checkMissions();
+
+        sfx(620,.07);
+
+        if(save.settings.vibration &&
+           navigator.vibrate){
+
+            navigator.vibrate(18);
+
+        }
+
+    }
+
+}
+
+
+document.addEventListener(
+    "keydown",
+    e=>{
+
+        if(
+            e.code==="Space" ||
+            e.code==="ArrowUp"
+        ){
+
+            e.preventDefault();
+
+            jump();
+
+        }
+
+    }
+);
+
+
+canvas.addEventListener(
+    "pointerdown",
+    e=>{
+
+        e.preventDefault();
+
+        jump();
+
+    }
+);
+
+
+/* =========================
+   SPAWN OBSTACLE
+========================= */
+
+function spawnObstacle(){
+
+    const h =
+        35+Math.random()*55;
+
+    const w =
+        25+Math.random()*35;
+
+    obstacles.push({
+
+        x:W+40,
+
+        y:groundY-h,
+
+        w,
+
+        h,
+
+        passed:false
+
+    });
+
+}
+
+
+/* =========================
+   SPAWN COINS
+========================= */
+
+function spawnCoin(){
+
+    coins.push({
+
+        x:W+30,
+
+        y:260+Math.random()*110,
+
+        r:10,
+
+        collected:false
+
+    });
+
+}
+
+
+/* =========================
+   BOSS
+========================= */
+
+function spawnBoss(){
+
+    if(boss)
+        return;
+
+    boss={
+
+        x:W+120,
+
+        y:groundY-100,
+
+        w:90,
+
+        h:100,
+
+        hp:3,
+
+        maxHp:3,
+
+        speed:2.5
+
+    };
+
+    showUnlock(
+        "⚠️ BOSS INCOMING",
+        "Jump over the boss!"
+    );
+
+    sfx(90,.3,"sawtooth");
+
+}
+
+
+/* =========================
+   PARTICLES
+========================= */
+
+function particle(
+    x,
+    y,
+    color,
+    count=8
+){
+
+    for(let i=0;i<count;i++){
+
+        particles.push({
+
+            x,
+
+            y,
+
+            vx:(Math.random()-.5)*7,
+
+            vy:(Math.random()-.5)*7,
+
+            life:30+Math.random()*30,
+
+            color
+
+        });
+
+    }
+
+}
+
+
+function updateParticles(){
+
+    for(
+        let i=particles.length-1;
+        i>=0;
+        i--
+    ){
+
+        const p=particles[i];
+
+        p.x+=p.vx;
+
+        p.y+=p.vy;
+
+        p.vy+=.15;
+
+        p.life--;
+
+        if(p.life<=0){
+
+            particles.splice(i,1);
+
+        }
+
+    }
+
+}
+
+
+function drawParticles(){
+
+    particles.forEach(p=>{
+
+        ctx.globalAlpha=
+            Math.max(
+                0,
+                p.life/60
+            );
+
+        ctx.fillStyle=p.color;
+
+        ctx.fillRect(
+            p.x,
+            p.y,
+            4,
+            4
+        );
+
+    });
+
+    ctx.globalAlpha=1;
+
+}
+
+
+/* =========================
+   COLLISION
+========================= */
+
+function hit(a,b){
+
+    return (
+
+        a.x < b.x+b.w &&
+        a.x+a.w > b.x &&
+        a.y < b.y+b.h &&
+        a.y+a.h > b.y
+
+    );
+
+}
+
+
+function loseLife(){
+
+    if(
+        save.inventory.shield>0 &&
+        !shieldUsed
+    ){
+
+        shieldUsed=true;
+
+        save.inventory.shield--;
+
+        saveData();
+
+        particle(
+            ninja.x+20,
+            ninja.y+30,
+            "#00f7ff",
+            25
+        );
+
+        showUnlock(
+            "🛡️ SHIELD!",
+            "Collision blocked"
+        );
+
+        sfx(800,.2);
+
+        return;
+
+    }
+
+    lives--;
+
+    cameraShake=15;
+
+    particle(
+        ninja.x+20,
+        ninja.y+30,
+        "#ff247f",
+        25
+    );
+
+    if(save.settings.vibration &&
+       navigator.vibrate){
+
+        navigator.vibrate(
+            [40,30,80]
+        );
+
+    }
+
+    sfx(
+        100,
+        .25,
+        "sawtooth"
+    );
+
+    if(lives<=0){
+
+        endGame();
+
+    }
+
+}
+
+
+/* =========================
+   UNLOCKS
+========================= */
+
+function checkOutfitUnlocks(){
+
+    outfits.forEach(outfit=>{
+
+        if(
+            score>=outfit.score &&
+            !save.unlockedOutfits.includes(
+                outfit.id
+            )
+        ){
+
+            save.unlockedOutfits.push(
+                outfit.id
+            );
+
+            saveData();
+
+            showUnlock(
+                "🥷 NEW NINJA!",
+                outfit.name
+            );
+
+            sfx(1000,.2);
+
+        }
+
+    });
+
+}
+
+
+/* =========================
+   POPUP
+========================= */
+
+let popupTimeout=null;
+
+
+function showUnlock(title,text){
+
+    const popup=
+        document.getElementById(
+            "unlockPopup"
+        );
+
+    document.getElementById(
+        "unlockTitle"
+    ).textContent=title;
+
+    document.getElementById(
+        "unlockText"
+    ).textContent=text;
+
+    popup.classList.add("show");
+
+    clearTimeout(popupTimeout);
+
+    popupTimeout=setTimeout(()=>{
+
+        popup.classList.remove("show");
+
+    },2200);
+
+}
+
+
+/* =========================
+   UPDATE HUD
+========================= */
+
+function updateHUD(){
+
+    document.getElementById(
+        "livesText"
+    ).textContent=lives;
+
+    document.getElementById(
+        "scoreText"
+    ).textContent=
+        Math.floor(score).toLocaleString();
+
+    document.getElementById(
+        "runCoinsText"
+    ).textContent=
+        runCoins.toLocaleString();
+
+}
+
+
+/* =========================
+   UPDATE GAME
+========================= */
+
+function update(){
+
+    frame++;
+
+    speed=
+        Math.min(
+            15,
+            6+score/18000
+        );
+
+    score+=speed*.055;
+
+    /* Ninja physics */
+
+    ninja.vy+=.75;
+
+    ninja.y+=ninja.vy;
+
+    if(ninja.y>=groundY-ninja.h){
+
+        ninja.y=
+            groundY-ninja.h;
+
+        ninja.vy=0;
+
+        ninja.jumping=false;
+
+    }
+
+
+    /* Spawn obstacles */
+
+    const obstacleRate=
+        Math.max(
+            38,
+            90-score/900
+        );
+
+    if(frame%Math.floor(obstacleRate)===0){
+
+        spawnObstacle();
+
+    }
+
+
+    /* Spawn coins */
+
+    if(frame%70===0){
+
+        spawnCoin();
+
+    }
+
+
+    /* Boss */
+
+    if(
+        score>=10000 &&
+        !boss &&
+        Math.floor(score/10000) >
+        Math.floor((score-speed*.055)/10000)
+    ){
+
+        spawnBoss();
+
+    }
+
+
+    /* Obstacles */
+
+    for(
+        let i=obstacles.length-1;
+        i>=0;
+        i--
+    ){
+
+        const o=obstacles[i];
+
+        o.x-=speed;
+
+        if(
+            !o.passed &&
+            o.x+o.w<ninja.x
+        ){
+
+            o.passed=true;
+
+        }
+
+        if(hit(ninja,o)){
+
+            obstacles.splice(i,1);
+
+            loseLife();
+
+            continue;
+
+        }
+
+        if(o.x+o.w<-50){
+
+            obstacles.splice(i,1);
+
+        }
+
+    }
+
+
+    /* Coins */
+
+    for(
+        let i=coins.length-1;
+        i>=0;
+        i--
+    ){
+
+        const c=coins[i];
+
+        c.x-=speed;
+
+        if(
+            magnetActive &&
+            Math.abs(c.x-(ninja.x+ninja.w/2))<170 &&
+            Math.abs(c.y-(ninja.y+ninja.h/2))<150
+        ){
+
+            c.x +=
+                (ninja.x+ninja.w/2-c.x)*.08;
+
+            c.y +=
+                (ninja.y+ninja.h/2-c.y)*.08;
+
+        }
+
+        const dx =
+            c.x-(ninja.x+ninja.w/2);
+
+        const dy =
+            c.y-(ninja.y+ninja.h/2);
+
+        const distance =
+            Math.sqrt(dx*dx+dy*dy);
+
+        if(distance<32){
+
+            const amount=
+                doubleCoinsActive?2:1;
+
+            runCoins+=amount;
+
+            save.missions.coins+=amount;
+
+            particle(
+                c.x,
+                c.y,
+                "#ffd54a",
+                12
+            );
+
+            sfx(900,.05,"triangle");
+
+            coins.splice(i,1);
+
+            checkMissions();
+
+            continue;
+
+        }
+
+        if(c.x<-30){
+
+            coins.splice(i,1);
+
+        }
+
+    }
+
+
+    /* Boss */
+
+    if(boss){
+
+        boss.x-=boss.speed;
+
+        if(hit(ninja,boss)){
+
+            loseLife();
+
+            boss.x+=50;
+
+        }
+
+        if(
+            ninja.x+50>boss.x &&
+            ninja.x<boss.x+boss.w &&
+            ninja.y+10<boss.y &&
+            ninja.vy>0
+        ){
+
+            boss.hp--;
+
+            ninja.vy=-12;
+
+            particle(
+                boss.x+45,
+                boss.y+30,
+                "#ff247f",
+                20
+            );
+
+            sfx(500,.1);
+
+            if(boss.hp<=0){
+
+                boss=null;
+
+                save.missions.bosses++;
+
+                save.coins+=150;
+
+                showUnlock(
+                    "👹 BOSS DEFEATED!",
+                    "+150 coins"
+                );
+
+                checkMissions();
+
+                saveData();
+
+            }
+
+        }
+
+        if(boss && boss.x<-150){
+
+            boss=null;
+
+        }
+
+    }
+
+
+    /* Buildings */
+
+    buildings.forEach(b=>{
+
+        b.x-=b.speed*speed;
+
+        if(b.x+b.width<0){
+
+            b.x=W+Math.random()*200;
+
+        }
+
+    });
+
+
+    updateParticles();
+
+    checkOutfitUnlocks();
+
+    if(cameraShake>0){
+
+        cameraShake*=.85;
+
+        if(cameraShake<.5)
+            cameraShake=0;
+
+    }
+
+    updateHUD();
+
+}
+
+
+/* =========================
+   DRAW BACKGROUND
+========================= */
+
+function drawBackground(){
+
+    const gradient=
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            H
+        );
+
+    gradient.addColorStop(
+        0,
+        "#09001d"
+    );
+
+    gradient.addColorStop(
+        .55,
+        "#11103a"
+    );
+
+    gradient.addColorStop(
+        1,
+        "#02040c"
+    );
+
+    ctx.fillStyle=gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /* Stars */
+
+    ctx.fillStyle="#fff";
+
+    for(let i=0;i<70;i++){
+
+        const x=
+            (i*137)%W;
+
+        const y=
+            (i*71)%280;
+
+        ctx.globalAlpha=
+            .25+((i%5)/10);
+
+        ctx.fillRect(
+            x,
+            y,
+            2,
+            2
+        );
+
+    }
+
+    ctx.globalAlpha=1;
+
+
+    /* Moon */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        820,
+        95,
+        52,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle="#eaffff";
+
+    ctx.shadowBlur=35;
+
+    ctx.shadowColor="#00f7ff";
+
+    ctx.fill();
+
+    ctx.shadowBlur=0;
+
+
+    /* City */
+
+    buildings.forEach((b,i)=>{
+
+        ctx.fillStyle=
+            i%2
+            ? "#090a1b"
+            : "#0d0d25";
+
+        ctx.fillRect(
+            b.x,
+            groundY-b.height,
+            b.width,
+            b.height
+        );
+
+        for(
+            let r=0;
+            r<4;
+            r++
+        ){
+
+            for(
+                let c=0;
+                c<3;
+                c++
+            ){
+
+                const idx=
+                    (r*3+c+i)%b.lights.length;
+
+                if(!b.lights[idx])
+                    continue;
+
+                ctx.fillStyle=
+                    "#ffd86b";
+
+                ctx.globalAlpha=.65;
+
+                ctx.fillRect(
+                    b.x+10+c*18,
+                    groundY-b.height+15+r*25,
+                    7,
+                    10
+                );
+
+            }
+
+        }
+
+        ctx.globalAlpha=1;
+
+    });
+
+
+    /* Ground */
+
+    ctx.fillStyle="#050611";
+
+    ctx.fillRect(
+        0,
+        groundY,
+        W,
+        H-groundY
+    );
+
+
+    ctx.strokeStyle="#00f7ff";
+
+    ctx.lineWidth=3;
+
+    ctx.shadowBlur=15;
+
+    ctx.shadowColor="#00f7ff";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        0,
+        groundY
+    );
+
+    ctx.lineTo(
+        W,
+        groundY
+    );
+
+    ctx.stroke();
+
+    ctx.shadowBlur=0;
+
+
+    /* Road lines */
+
+    ctx.strokeStyle=
+        "rgba(139,92,246,.35)";
+
+    ctx.lineWidth=2;
+
+    for(
+        let x=-(frame*speed*.5)%100;
+        x<W;
+        x+=100
+    ){
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            groundY+45
+        );
+
+        ctx.lineTo(
+            x+50,
+            groundY+45
+        );
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+/* =========================
+   DRAW NINJA
+========================= */
+
+function drawNinja(){
+
+    const c=
+        getOutfit().color;
+
+    ctx.save();
+
+    ctx.translate(
+        ninja.x,
+        ninja.y
+    );
+
+
+    /* Shadow */
+
+    ctx.globalAlpha=.25;
+
+    ctx.fillStyle="#000";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        ninja.w/2,
+        ninja.h+7,
+        30,
+        7,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.globalAlpha=1;
+
+
+    /* Glow */
+
+    ctx.shadowBlur=22;
+
+    ctx.shadowColor=c;
+
+
+    /* Body */
+
+    ctx.fillStyle=c;
+
+    ctx.fillRect(
+        8,
+        24,
+        29,
+        39
+    );
+
+
+    /* Head */
+
+    ctx.fillStyle="#090909";
+
+    ctx.fillRect(
+        7,
+        5,
+        31,
+        28
+    );
+
+
+    /* Eyes */
+
+    ctx.fillStyle=c;
+
+    ctx.fillRect(
+        13,
+        16,
+        7,
+        3
+    );
+
+    ctx.fillRect(
+        25,
+        16,
+        7,
+        3
+    );
+
+
+    /* Scarf */
+
+    ctx.fillStyle=c;
+
+    ctx.fillRect(
+        5,
+        29,
+        38,
+        5
+    );
+
+    ctx.fillRect(
+        36,
+        31,
+        16,
+        5
+    );
+
+
+    /* Legs */
+
+    ctx.fillStyle="#080808";
+
+    ctx.fillRect(
+        9,
+        60,
+        10,
+        12
+    );
+
+    ctx.fillRect(
+        27,
+        60,
+        10,
+        12
+    );
+
+
+    ctx.restore();
+
+}
+
+
+/* =========================
+   DRAW OBSTACLES
+========================= */
+
+function drawObstacles(){
+
+    obstacles.forEach(o=>{
+
+        ctx.save();
+
+        ctx.fillStyle="#ff247f";
+
+        ctx.shadowBlur=20;
+
+        ctx.shadowColor="#ff247f";
+
+        ctx.fillRect(
+            o.x,
+            o.y,
+            o.w,
+            o.h
+        );
+
+        ctx.fillStyle="#fff";
+
+        ctx.globalAlpha=.4;
+
+        ctx.fillRect(
+            o.x+5,
+            o.y+5,
+            4,
+            o.h-10
+        );
+
+        ctx.restore();
+
+    });
+
+}
+
+
+/* =========================
+   DRAW COINS
+========================= */
+
+function drawCoins(){
+
+    coins.forEach(c=>{
+
+        ctx.save();
+
+        ctx.translate(
+            c.x,
+            c.y
+        );
+
+        ctx.rotate(
+            frame*.05
+        );
+
+        ctx.fillStyle="#ffd54a";
+
+        ctx.shadowBlur=18;
+
+        ctx.shadowColor="#ffd54a";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,
+            0,
+            c.r,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        ctx.fillStyle="#fff2a1";
+
+        ctx.fillRect(
+            -2,
+            -6,
+            4,
+            12
+        );
+
+        ctx.restore();
+
+    });
+
+}
+
+
+/* =========================
+   DRAW BOSS
+========================= */
+
+function drawBoss(){
+
+    if(!boss)
+        return;
+
+    ctx.save();
+
+    ctx.fillStyle="#ff247f";
+
+    ctx.shadowBlur=30;
+
+    ctx.shadowColor="#ff247f";
+
+    ctx.fillRect(
+        boss.x,
+        boss.y,
+        boss.w,
+        boss.h
+    );
+
+    ctx.fillStyle="#080808";
+
+    ctx.fillRect(
+        boss.x+15,
+        boss.y+15,
+        boss.w-30,
+        35
+    );
+
+    ctx.fillStyle="#fff";
+
+    ctx.fillRect(
+        boss.x+25,
+        boss.y+28,
+        12,
+        5
+    );
+
+    ctx.fillRect(
+        boss.x+53,
+        boss.y+28,
+        12,
+        5
+    );
+
+    ctx.restore();
+
+
+    /* HP */
+
+    const barW=100;
+
+    ctx.fillStyle="rgba(0,0,0,.5)";
+
+    ctx.fillRect(
+        boss.x-5,
+        boss.y-18,
+        barW+10,
+        8
+    );
+
+    ctx.fillStyle="#ff247f";
+
+    ctx.fillRect(
+        boss.x,
+        boss.y-16,
+        barW*(boss.hp/boss.maxHp),
+        4
+    );
+
+}
+
+
+/* =========================
+   DRAW
+========================= */
+
+function draw(){
+
+    ctx.save();
+
+    if(cameraShake){
+
+        ctx.translate(
+            (Math.random()-.5)*cameraShake,
+            (Math.random()-.5)*cameraShake
+        );
+
+    }
+
+    drawBackground();
+
+    drawCoins();
+
+    drawObstacles();
+
+    drawBoss();
+
+    drawNinja();
+
+    drawParticles();
+
+    ctx.restore();
+
+}
+
+
+/* =========================
+   GAME LOOP
+========================= */
+
+function loop(){
+
+    if(!running)
+        return;
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(loop);
+
+}
+
+
+/* =========================
+   INITIALIZE
+========================= */
+
+loadSave();
+
+updateMenu();
+
+showScreen("mainMenu");
+
+</script>
+
+</body>
+</html>
