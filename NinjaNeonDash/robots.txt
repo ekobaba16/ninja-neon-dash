@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ninja-neon-runner.com/sitemap.xml
+Sitemap: https://ekobaba16.github.io/ninja-neon-dash/sitemap.xml
