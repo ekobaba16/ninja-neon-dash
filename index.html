@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ninja Neon Dash – Free Ninja Neon Runner Game</title>
+
+    <meta name="description"
+          content="Play Ninja Neon Dash, a fast and exciting ninja neon runner game. Run, jump, collect coins, unlock ninja outfits and beat your high score. Play free on PC, mobile and tablet.">
+
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title"
+          content="Ninja Neon Dash – Ninja Neon Runner Game">
+
+    <meta property="og:description"
+          content="Run through the neon city, avoid obstacles, collect coins and unlock ninja outfits.">
+
+    <meta property="og:type" content="website">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top, #25105c 0%, #090a18 45%, #03040a 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            padding: 22px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            background: rgba(0,0,0,.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: #00f7ff;
+            text-shadow:
+                0 0 5px #00f7ff,
+                0 0 15px #00f7ff,
+                0 0 30px #00f7ff;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: bold;
+            transition: .2s;
+        }
+
+        nav a:hover {
+            color: #00f7ff;
+            text-shadow: 0 0 10px #00f7ff;
+        }
+
+        .hero {
+            min-height: 75vh;
+            max-width: 1100px;
+            margin: auto;
+            padding: 100px 20px 70px;
+            text-align: center;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 16px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(0,247,255,.4);
+            border-radius: 50px;
+            color: #00f7ff;
+            background: rgba(0,247,255,.06);
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 9vw, 90px);
+            line-height: 1;
+            margin-bottom: 25px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #00f7ff,
+                    #8b5cf6,
+                    #ff247f
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero h2 {
+            font-size: clamp(20px, 4vw, 32px);
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .hero p {
+            max-width: 750px;
+            color: #c4c7d8;
+            font-size: 18px;
+            line-height: 1.7;
+        }
+
+        .buttons {
+            margin-top: 35px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .play-button {
+            display: inline-block;
+            padding: 17px 40px;
+            border-radius: 50px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #00eaff,
+                    #8b5cf6
+                );
+
+            color: white;
+            text-decoration: none;
+            font-size: 19px;
+            font-weight: 900;
+
+            box-shadow:
+                0 0 15px rgba(0,234,255,.4),
+                0 0 40px rgba(139,92,246,.25);
+
+            transition: .2s;
+        }
+
+        .play-button:hover {
+            transform: translateY(-3px) scale(1.04);
+        }
+
+        .learn-button {
+            display: inline-block;
+            padding: 17px 40px;
+            border-radius: 50px;
+
+            border: 1px solid rgba(255,255,255,.2);
+            background: rgba(255,255,255,.05);
+
+            color: white;
+            text-decoration: none;
+            font-size: 19px;
+            font-weight: bold;
+
+            transition: .2s;
+        }
+
+        .learn-button:hover {
+            background: rgba(255,255,255,.1);
+        }
+
+        .features {
+            max-width: 1100px;
+            margin: auto;
+            padding: 40px 20px 100px;
+
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            padding: 30px;
+            min-height: 210px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.07),
+                    rgba(255,255,255,.025)
+                );
+
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 22px;
+
+            box-shadow:
+                0 15px 50px rgba(0,0,0,.25);
+
+            transition: .25s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0,247,255,.4);
+        }
+
+        .icon {
+            font-size: 40px;
+            margin-bottom: 18px;
+        }
+
+        .card h3 {
+            color: #00f7ff;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #aaaec0;
+            line-height: 1.6;
+        }
+
+        .seo-section {
+            max-width: 900px;
+            margin: auto;
+            padding: 0 20px 100px;
+            text-align: center;
+        }
+
+        .seo-section h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .seo-section p {
+            color: #aaaec0;
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 35px 20px;
+            color: #707384;
+            border-top: 1px solid rgba(255,255,255,.08);
+        }
+
+        @media (max-width: 750px) {
+
+            header {
+                padding: 18px 20px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .hero {
+                min-height: 70vh;
+                padding-top: 70px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+        }
+
+    </style>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "name": "Ninja Neon Dash",
+        "description": "A free browser-based ninja neon runner game.",
+        "genre": [
+            "Runner",
+            "Action",
+            "Arcade"
+        ],
+        "gamePlatform": [
+            "Web Browser",
+            "Mobile",
+            "Tablet"
+        ],
+        "applicationCategory": "Game"
+    }
+    </script>
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        NINJA NEON DASH
+    </div>
+
+    <nav>
+        <a href="/">HOME</a>
+        <a href="/game.html">PLAY</a>
+    </nav>
+
+</header>
+
+
+<main>
+
+    <section class="hero">
+
+        <div class="badge">
+            ⚡ FREE BROWSER GAME
+        </div>
+
+        <h1>
+            Ninja Neon Dash
+        </h1>
+
+        <h2>
+            Ninja Neon Runner Game
+        </h2>
+
+        <p>
+            Run through a futuristic neon city,
+            jump over dangerous obstacles,
+            collect coins, unlock ninja outfits
+            and try to beat your highest score.
+        </p>
+
+        <div class="buttons">
+
+            <a class="play-button" href="/game.html">
+                🥷 PLAY NOW
+            </a>
+
+            <a class="learn-button" href="#features">
+                DISCOVER THE GAME
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <section class="features" id="features">
+
+        <div class="card">
+
+            <div class="icon">
+                🥷
+            </div>
+
+            <h3>
+                Ninja Runner
+            </h3>
+
+            <p>
+                Control your ninja and survive
+                as long as possible while the
+                neon city gets faster and harder.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">
+                ⚡
+            </div>
+
+            <h3>
+                Neon City
+            </h3>
+
+            <p>
+                Run through a futuristic city
+                filled with glowing lights,
+                effects and animated backgrounds.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">
+                🪙
+            </div>
+
+            <h3>
+                Collect & Unlock
+            </h3>
+
+            <p>
+                Collect coins, unlock new ninja
+                outfits, complete missions and
+                improve your high score.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="seo-section">
+
+        <h2>
+            Play Ninja Neon Dash
+        </h2>
+
+        <p>
+            Ninja Neon Dash is a free ninja neon runner
+            game designed for modern web browsers.
+            You can play the game on PC, mobile phones
+            and tablets. Jump over obstacles, collect
+            coins and challenge yourself to achieve
+            a new high score in the neon city.
+        </p>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    © 2026 Ninja Neon Dash
+
+</footer>
+
+</body>
+</html>
